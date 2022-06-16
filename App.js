@@ -6,9 +6,11 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { Component } from "react";
 import type {Node} from 'react';
 import {
+  Alert,
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -16,9 +18,7 @@ import {
   Text,
   useColorScheme,
   View,
-} from 'react-native';
-
-import PingRecorder from '/src/PingRecorder'
+} from "react-native";
 
 import {
   Colors,
@@ -28,17 +28,21 @@ import {
   //ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { Measurecomponent } from "./src/MeasureComponent";
+import { styles } from "./src/styles";
+import Debug from "react-native/Libraries/Utilities/HMRClient";
+
+const Separator = () => (
+  <View style={styles.separator} />
+);
+
+const isDarkMode = true
+
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
+      <Text style={[  styles.sectionTitle, { color: isDarkMode ? Colors.white : Colors.black, },]}>
         {title}
       </Text>
       <Text
@@ -55,7 +59,8 @@ const Section = ({children, title}): Node => {
 };
 
 const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  // added as global constant, true
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -72,32 +77,18 @@ const App: () => Node = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Last measurement">
-            {PingRecorder}
-          </Section>
+          <Separator />
+          <Text>
+            This is an app to measure rtt to different sites.
+            Email to kaifrichter@gmail.com for more info.
+          </Text>
+          <Separator />
+          <Measurecomponent />
+
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;

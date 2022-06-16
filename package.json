@@ -10,9 +10,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.6",
+    "parse": "^3.4.2",
     "react": "17.0.2",
     "react-native": "^0.68.2",
-    "react-native-ping":  "1.2.6"
+    "react-native-ping": "1.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
