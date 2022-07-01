@@ -13,6 +13,7 @@ export function initDataSaver() {
 
   // Parse.setAsyncStorage(AsyncStorage);
   // Parse.serverURL = 'http://YOUR_PARSE_SERVER:1337/parse'
+
 }
 
 export async function saveData(time, rtt, address) {
