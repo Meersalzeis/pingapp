@@ -31,6 +31,9 @@ import {makePings} from "./PingMaker";
 const isDarkMode = true;
 let staticMeasureComponent
 
+const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
+let BGServ
+
 export class MeasureComponent extends Component {
 
   constructor(props) {
@@ -38,6 +41,9 @@ export class MeasureComponent extends Component {
 
     initDataSaver()
     staticMeasureComponent = this
+    BGServ = new BService()
+    BGServ.Start()
+    console.log("MeasureComponent constructor initialized BGServ and DataSaver")
 
     this.state = {
       timer: 0,
@@ -45,7 +51,7 @@ export class MeasureComponent extends Component {
       message: "no message yet"
     }
 
-    // current machanism to get pings
+    // current mechanism to get pings
     this.getTimer = setInterval(async () => {
       if ( this.state.isActivated ) {
         this.setState({
@@ -59,6 +65,7 @@ export class MeasureComponent extends Component {
 
   componentWillUnmount() {
     clearInterval(this.getTimer)
+    BGServ.Stop()
   }
 
   startStop = () => {
@@ -98,8 +105,7 @@ export class MeasureComponent extends Component {
 
 
 class BService {
-  constructor()
-  {
+  constructor() {
     this.Options = {
       taskName: 'Demo',
       taskTitle: 'Demo Running',
@@ -114,27 +120,26 @@ class BService {
       },
       actions: '["Exit"]'
     };
+ }
+ async VeryIntensiveTask(taskDataArguments) {
+    const { delay } = taskDataArguments;
+    await new Promise(async (resolve) => {
+      var i = 0;
+      for (let i = 0; BackgroundJob.isRunning(); i++) {
+        staticMeasureComponent.setState({timer: staticMeasureComponent.state.timer+1}) //message: "Success DOOD "+i
+        // })
+        await sleep(delay);
+      }
+    });
+  }
 
+  Start() {
+    BackgroundService.start(this.VeryIntensiveTask, this.Options);
+    console.log("BGService started")
+  }
 
-  }async VeryIntensiveTask(taskDataArguments)
-{
-  const { delay } = taskDataArguments;
-  await new Promise(async (resolve) => {
-    var i = 0;
-    for (let i = 0; BackgroundJob.isRunning(); i++) {  staticMeasureComponent.setState({timer: staticMeasureComponent.state.timer+1}) //message: "Success DOOD "+i
-      // })
-      await sleep(delay);
-    }
-  });
-}Start()
-{
-  BackgroundService.start(this.VeryIntensiveTask, this.Options);
-  Debug.log("BGService started?")
-}Stop()
-{
-  BackgroundService.stop();
+  Stop() {
+    BackgroundService.stop();
+  }
 }
-}
-
-export const BGService = new BService()
 

@@ -4,7 +4,7 @@ import { saveData } from "./DataSaver";
 // https://github.com/RoJoHub/react-native-ping  as tutorial
 
 const addresses = ["www.google.de", "www.yahoo.com"]
-var message = "error in ping code"
+var message = "error in ping code - nothing set yet"
 
 export async function makePings() {
   let errorOccured = false
