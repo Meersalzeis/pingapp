@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { Component } from "react";
+import React from "react";
 import type {Node} from 'react';
 import {
   Alert,
@@ -28,9 +28,9 @@ import {
   //ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { Measurecomponent } from "./src/MeasureComponent";
+import { MeasureComponent } from "./src/MeasureComponent";
 import { styles } from "./src/styles";
-import Debug from "react-native/Libraries/Utilities/HMRClient";
+//import Debug from "react-native/Libraries/Utilities/HMRClient";
 
 const Separator = () => (
   <View style={styles.separator} />
@@ -83,7 +83,7 @@ const App: () => Node = () => {
             Email to kaifrichter@gmail.com for more info.
           </Text>
           <Separator />
-          <Measurecomponent />
+          <MeasureComponent />
 
         </View>
       </ScrollView>

@@ -3,7 +3,7 @@ import Colors from "react-native/Libraries/NewAppScreen/components/Colors";
 import { Alert, Button, Text, View } from "react-native"; // for timer
 import React, { Component } from "react";
 import { styles } from "./styles";
-import {initDataSaver, saveData} from './DataSaver';
+import {initDataSaver} from './DataSaver';
 import {makePings} from "./PingMaker";
 
 // Outputs a single text with the most recent measurement
@@ -25,27 +25,32 @@ import {makePings} from "./PingMaker";
 // TODO change text
 
 const isDarkMode = true;
+let staticMeasureComponent
 
-export class Measurecomponent extends Component {
+export class MeasureComponent extends Component {
 
   constructor(props) {
     super(props)
 
     initDataSaver()
+    staticMeasureComponent = this
 
     this.state = {
       timer: 0,
-      isActivated: false
+      isActivated: false,
+      message: "no message yet"
     }
 
-    this.getTimer = setInterval(() => {
+    // current machanism to get pings
+    this.getTimer = setInterval(async () => {
       if ( this.state.isActivated ) {
         this.setState({
-          timer: this.state.timer + 1
+          timer: this.state.timer + 1,
+          message: await makePings()
         })
-
       }
-    }, 1000)
+    }, 1000) // timeout in ms => 1 sec
+
   }
 
   componentWillUnmount() {
@@ -78,7 +83,7 @@ export class Measurecomponent extends Component {
         />
 
         <Text style={[  styles.sectionTitle, { color: isDarkMode ? Colors.white : Colors.black, },]}>
-          The timer is at {this.state.timer}
+          Last ping : {this.state.message}
         </Text>
       </View>
     )
