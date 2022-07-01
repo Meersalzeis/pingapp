@@ -2,6 +2,10 @@ import Colors from "react-native/Libraries/NewAppScreen/components/Colors";
 
 import { Alert, Button, Text, View } from "react-native"; // for timer
 import React, { Component } from "react";
+
+import BackgroundService from 'react-native-background-actions';
+import BackgroundJob from 'react-native-background-actions';
+
 import { styles } from "./styles";
 import {initDataSaver} from './DataSaver';
 import {makePings} from "./PingMaker";
@@ -83,9 +87,54 @@ export class MeasureComponent extends Component {
         />
 
         <Text style={[  styles.sectionTitle, { color: isDarkMode ? Colors.white : Colors.black, },]}>
-          Last ping : {this.state.message}
+          Last ping : { this.state.timer //this.state.message
+           }
         </Text>
       </View>
     )
   }
 }
+
+
+
+class BService {
+  constructor()
+  {
+    this.Options = {
+      taskName: 'Demo',
+      taskTitle: 'Demo Running',
+      taskDesc: 'Demo',
+      taskIcon: {
+        name: 'ic_launcher',
+        type: 'mipmap',
+      },
+      color: '#ff00ff',
+      parameters: {
+        delay: 5000,
+      },
+      actions: '["Exit"]'
+    };
+
+
+  }async VeryIntensiveTask(taskDataArguments)
+{
+  const { delay } = taskDataArguments;
+  await new Promise(async (resolve) => {
+    var i = 0;
+    for (let i = 0; BackgroundJob.isRunning(); i++) {  staticMeasureComponent.setState({timer: staticMeasureComponent.state.timer+1}) //message: "Success DOOD "+i
+      // })
+      await sleep(delay);
+    }
+  });
+}Start()
+{
+  BackgroundService.start(this.VeryIntensiveTask, this.Options);
+  Debug.log("BGService started?")
+}Stop()
+{
+  BackgroundService.stop();
+}
+}
+
+export const BGService = new BService()
+

@@ -28,7 +28,7 @@ import {
   //ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { MeasureComponent } from "./src/MeasureComponent";
+import { MeasureComponent} from "./src/MeasureComponent";
 import { styles } from "./src/styles";
 //import Debug from "react-native/Libraries/Utilities/HMRClient";
 
@@ -84,7 +84,6 @@ const App: () => Node = () => {
           </Text>
           <Separator />
           <MeasureComponent />
-
         </View>
       </ScrollView>
     </SafeAreaView>

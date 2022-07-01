@@ -3,8 +3,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // https://docs.parseplatform.org/js/guide/
 
+import {BGService} from "./MeasureComponent";
+
 //const ParseClass = Parse.Object.extend("Measurement");
 //const newParseObj = new ParseClass();
+
+let BGServ
 
 export function initDataSaver() {
 
@@ -13,6 +17,9 @@ export function initDataSaver() {
 
   // Parse.setAsyncStorage(AsyncStorage);
   // Parse.serverURL = 'http://YOUR_PARSE_SERVER:1337/parse'
+
+  BGServ = BGService
+  Debug.log("heh?")
 }
 
 export async function saveData(time, rtt, address) {
