@@ -10,12 +10,15 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.17.6",
-    "parse": "^3.4.2",
+    "@parse/react-native": "^0.0.1-alpha.18",
+    "@react-native-async-storage/async-storage": "^1.13.0",
+    "idb-keyval": "^6.2.0",
+    "parse": "^3.4.3",
     "react": "17.0.2",
     "react-native": "^0.68.2",
     "react-native-background-actions": "^2.6.7",
-    "react-native-ping": "1.2.6"
+    "react-native-ping": "1.2.6",
+    "realm": "^10.19.5"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",

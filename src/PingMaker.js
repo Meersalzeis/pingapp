@@ -12,7 +12,11 @@ export async function makePings() {
     try {
       const rtt = await Ping.start(addresses[i], { timeout: 1000 });
       if (!errorOccured) message =  "ping took " + rtt + " ms to address " + addresses[i]
-      await saveData(new Date(), rtt, addresses[i])
+      const check = await saveData(new Date(), rtt, addresses[i])
+      if (!check) {
+        message = "connecting to " + addresses[i] + " - timeout "
+        errorOccured = true
+      }
     } catch (err) {
       message = "connecting to " + addresses[i] + " - " + err.message
       errorOccured = true
