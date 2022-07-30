@@ -1,6 +1,6 @@
 
 import Ping from 'react-native-ping';
-import { saveData } from "./DataSaver";
+import { saveData } from "./REST_DataSaver";
 // https://github.com/RoJoHub/react-native-ping  as tutorial
 
 const addresses = ["www.google.de", "www.yahoo.com"]

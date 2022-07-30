@@ -7,7 +7,7 @@ import BackgroundService from 'react-native-background-actions';
 import BackgroundJob from 'react-native-background-actions';
 
 import { styles } from "./styles";
-import {initDataSaver} from './DataSaver';
+import {initDataSaver} from './REST_DataSaver';
 import {makePings} from "./PingMaker";
 
 // Outputs a single text with the most recent measurement
