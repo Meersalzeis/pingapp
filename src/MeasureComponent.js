@@ -18,15 +18,7 @@ import {makePings} from "./PingMaker";
 // https://reactnative.dev/docs/headless-js-android#the-js-api
 
 // when you want to stop:
-//NativeModules.Background.stopHeadlessJSForegroundService();
-
-
-// TODO get text
-// TODO get time
-// TODO timer
-// TODO ping
-// TODO get RTT
-// TODO change text
+// NativeModules.Background.stopHeadlessJSForegroundService();
 
 const isDarkMode = true;
 let staticMeasureComponent
@@ -94,7 +86,7 @@ export class MeasureComponent extends Component {
         />
 
         <Text style={[  styles.sectionTitle, { color: isDarkMode ? Colors.white : Colors.black, },]}>
-          Last ping : { this.state.timer //this.state.message
+          Last ping : { this.state.message
            }
         </Text>
       </View>
@@ -102,7 +94,7 @@ export class MeasureComponent extends Component {
   }
 }
 
-
+// ping mechanism
 
 class BService {
   constructor() {
@@ -126,8 +118,11 @@ class BService {
     await new Promise(async (resolve) => {
       var i = 0;
       for (let i = 0; BackgroundJob.isRunning(); i++) {
-        staticMeasureComponent.setState({timer: staticMeasureComponent.state.timer+1}) //message: "Success DOOD "+i
-        // })
+        staticMeasureComponent.setState({
+          timer: staticMeasureComponent.state.timer + 1,
+          message: await makePings()
+        })
+
         await sleep(delay);
       }
     });
