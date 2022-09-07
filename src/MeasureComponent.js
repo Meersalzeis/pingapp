@@ -7,8 +7,8 @@ import BackgroundService from 'react-native-background-actions';
 import BackgroundJob from 'react-native-background-actions';
 
 import {styles} from "./styles";
-import {initDataSaver} from './REST_DataSaver';
 import {makePings} from "./PingMaker";
+import { writeToFile } from "./FileSaver";
 
 // Outputs a single text with the most recent measurement
 
@@ -27,6 +27,7 @@ const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 let BGServ
 
 export function newSetName(newName) {
+  writeToFile(newName);
   staticMeasureComponent.setState({
     setName: newName
   })
@@ -37,7 +38,6 @@ export class MeasureComponent extends Component {
   constructor(props) {
     super(props)
 
-    initDataSaver()
     staticMeasureComponent = this
     BGServ = new BService()
     BGServ.Start()
@@ -46,6 +46,7 @@ export class MeasureComponent extends Component {
     this.state = {
       timer: 0,
       isActivated: false,
+      interval: 5000,
       message: "no message yet",
       setName: "set"
     }
@@ -82,7 +83,7 @@ export class MeasureComponent extends Component {
         />
 
         <Text style={[  styles.sectionTitle, { color: isDarkMode ? Colors.white : Colors.black, },]}>
-          Last ping : { this.state.timer + " - " + this.state.setName
+          Last ping : { this.state.timer + " - " + this.state.message
            }
         </Text>
       </View>

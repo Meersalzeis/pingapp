@@ -1,6 +1,6 @@
 
 import Ping from 'react-native-ping';
-import { saveData } from "./REST_DataSaver";
+import { addEntry } from "./FileSaver";
 // https://github.com/RoJoHub/react-native-ping  as tutorial
 
 const addresses = ["www.google.de", "www.yahoo.com"]
@@ -11,11 +11,11 @@ export async function makePings(setName) {
   for (let i = 0; i < addresses.length; i++) {
     try {
       const rtt = await Ping.start(addresses[i], { timeout: 1000 });
-      if (!errorOccured) message =  "ping took " + rtt + " ms to address " + addresses[i]
-      const check = await saveData(new Date(), rtt, addresses[i], setName)
-      if (!check) {
-        message = "connecting to " + addresses[i] + " - timeout "
-        errorOccured = true
+      if (!errorOccured) {
+        message =  "ping took " + rtt + " ms to address " + addresses[i]
+        addEntry( addresses[i], new Date() , rtt)
+      } else {
+        message =  "error occured while pinging " + addresses[i]
       }
     } catch (err) {
       message = "connecting to " + addresses[i] + " - " + err.message
