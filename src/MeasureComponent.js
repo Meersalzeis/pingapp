@@ -6,7 +6,7 @@ import React, { Component } from "react";
 import BackgroundService from 'react-native-background-actions';
 import BackgroundJob from 'react-native-background-actions';
 
-import { styles } from "./styles";
+import {styles} from "./styles";
 import {initDataSaver} from './REST_DataSaver';
 import {makePings} from "./PingMaker";
 
@@ -26,6 +26,12 @@ let staticMeasureComponent
 const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 let BGServ
 
+export function newSetName(newName) {
+  staticMeasureComponent.setState({
+    setName: newName
+  })
+}
+
 export class MeasureComponent extends Component {
 
   constructor(props) {
@@ -40,23 +46,13 @@ export class MeasureComponent extends Component {
     this.state = {
       timer: 0,
       isActivated: false,
-      message: "no message yet"
+      message: "no message yet",
+      setName: "set"
     }
-
-    // current mechanism to get pings
-    this.getTimer = setInterval(async () => {
-      if ( this.state.isActivated ) {
-        this.setState({
-          timer: this.state.timer + 1,
-          message: await makePings()
-        })
-      }
-    }, 1000) // timeout in ms => 1 sec
-
   }
 
   componentWillUnmount() {
-    clearInterval(this.getTimer)
+    //clearInterval(this.getTimer)
     BGServ.Stop()
   }
 
@@ -86,7 +82,7 @@ export class MeasureComponent extends Component {
         />
 
         <Text style={[  styles.sectionTitle, { color: isDarkMode ? Colors.white : Colors.black, },]}>
-          Last ping : { this.state.message
+          Last ping : { this.state.timer + " - " + this.state.setName
            }
         </Text>
       </View>
@@ -118,10 +114,12 @@ class BService {
     await new Promise(async (resolve) => {
       var i = 0;
       for (let i = 0; BackgroundJob.isRunning(); i++) {
-        staticMeasureComponent.setState({
-          timer: staticMeasureComponent.state.timer + 1,
-          message: await makePings()
-        })
+        if (staticMeasureComponent.state.isActivated) {
+          staticMeasureComponent.setState({
+            timer: staticMeasureComponent.state.timer + 1,
+            message: await makePings( staticMeasureComponent.state.setName )
+          })
+        }
 
         await sleep(delay);
       }

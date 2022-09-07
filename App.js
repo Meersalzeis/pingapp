@@ -18,6 +18,7 @@ import {
   Text,
   useColorScheme,
   View,
+  TextInput
 } from "react-native";
 
 import {
@@ -28,7 +29,7 @@ import {
   //ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { MeasureComponent} from "./src/MeasureComponent";
+import { MeasureComponent, newSetName } from "./src/MeasureComponent";
 import { styles } from "./src/styles";
 //import Debug from "react-native/Libraries/Utilities/HMRClient";
 
@@ -37,6 +38,11 @@ const Separator = () => (
 );
 
 const isDarkMode = true
+let setNameVar = "set"
+
+function changeSetNameText(text) {
+  setNameVar = text;
+}
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -82,6 +88,16 @@ const App: () => Node = () => {
             This is an app to measure rtt to different sites.
             Email to kaifrichter@gmail.com for more info.
           </Text>
+          <Separator />
+          <Text>
+            Set name
+          </Text>
+          <Separator />
+          <TextInput
+            style={styles.input}
+            onChangeText={ text => changeSetNameText(text) }
+            onEndEditing={ () => newSetName(setNameVar) }
+            />
           <Separator />
           <MeasureComponent />
         </View>
