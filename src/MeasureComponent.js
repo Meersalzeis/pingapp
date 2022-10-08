@@ -1,6 +1,6 @@
 import Colors from "react-native/Libraries/NewAppScreen/components/Colors";
 
-import { Alert, Button, Text, View } from "react-native"; // for timer
+import { Alert, Button, Text, TextInput, View } from "react-native"; // for timer
 import React, { Component } from "react";
 
 import BackgroundService from 'react-native-background-actions';
@@ -20,8 +20,14 @@ import { writeToFile } from "./FileSaver";
 // when you want to stop:
 // NativeModules.Background.stopHeadlessJSForegroundService();
 
+const Separator = () => (
+  <View style={styles.separator} />
+);
+
 const isDarkMode = true;
 let staticMeasureComponent
+let intervalInputFieldText = "5000"
+let delay = 5000
 
 const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 let BGServ
@@ -82,6 +88,18 @@ export class MeasureComponent extends Component {
           }
         />
 
+        <Separator />
+        <Text>
+          Set delay between pings in milliseconds
+        </Text>
+        <Separator />
+
+        <TextInput
+          style={styles.input}
+          onChangeText={ text => changeIntervalText(text) }
+          onEndEditing={ () => newInterval(intervalInputFieldText) }
+        />
+
         <Text style={[  styles.sectionTitle, { color: isDarkMode ? Colors.white : Colors.black, },]}>
           Last ping : { this.state.timer + " - " + this.state.message
            }
@@ -89,6 +107,17 @@ export class MeasureComponent extends Component {
       </View>
     )
   }
+}
+
+function changeIntervalText(text) {
+  intervalInputFieldText = text;
+}
+
+function newInterval(newValue) {
+  delay = newValue
+  staticMeasureComponent.setState({
+    interval: newValue
+  })
 }
 
 // ping mechanism
@@ -103,18 +132,28 @@ class BService {
         name: 'ic_launcher',
         type: 'mipmap',
       },
-      color: '#ff00ff',
+      color: '#2222ff',
+      /**
       parameters: {
-        delay: 5000,
-      },
+        delay: staticMeasureComponent.state.interval ,
+      }, **/
       actions: '["Exit"]'
     };
  }
+
+  // TODO change to : outer loop: over delays( inner loop over addresses, wait)
+  // TODO get bgtask_clock_delay, change delay to 1 and 0.1 for small test samples with adresses at home
  async VeryIntensiveTask(taskDataArguments) {
-    const { delay } = taskDataArguments;
+    //const { delay } = taskDataArguments;
+    var lastCycle = Date.now()
+
+    // While Background service is activated, repeat
     await new Promise(async (resolve) => {
-      var i = 0;
       for (let i = 0; BackgroundJob.isRunning(); i++) {
+
+        console.log("ping")
+
+        // Make ping
         if (staticMeasureComponent.state.isActivated) {
           staticMeasureComponent.setState({
             timer: staticMeasureComponent.state.timer + 1,
@@ -122,7 +161,11 @@ class BService {
           })
         }
 
-        await sleep(delay);
+        // wait until next cycle
+        let timeToSleep = delay - ( Date.now() - lastCycle )
+        console.log(timeToSleep);
+        if (timeToSleep > 0) await sleep(timeToSleep);
+        lastCycle = Date.now();
       }
     });
   }

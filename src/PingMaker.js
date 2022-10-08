@@ -13,7 +13,8 @@ export async function makePings(setName) {
       const rtt = await Ping.start(addresses[i], { timeout: 1000 });
       if (!errorOccured) {
         message =  "ping took " + rtt + " ms to address " + addresses[i]
-        addEntry( addresses[i], new Date() , rtt)
+        addEntry( addresses[i], Date.now() , rtt) // Date.now() = ms since midnight January 1, 1970, new Date() = "timestamp in human"
+        console.log("saved entry")
       } else {
         message =  "error occured while pinging " + addresses[i]
       }
